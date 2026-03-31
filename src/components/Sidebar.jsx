@@ -4,7 +4,7 @@ function Sidebar(){
     return (
         <div style = {{width:"200px", background:"#eee", padding:"20px"}}>
 
-            <h3>Fund Tracker</h3>
+            <h3 className="text-2xl font-bold">Fund Tracker</h3>
             <nav>
                 <div>
                     <Link to="/">Dashboard</Link>
