@@ -1,7 +1,9 @@
 import Layout from "../components/Layout"
 import PortfolioCard from "../components/PortfolioCard"
+import { usePortfolio } from "../context/PortfolioContext"
 
-export default function Dashboard() {
+function Dashboard() {
+  const { portfolioValue, nav, totalUnits, investors } = usePortfolio()
   return (
 
     <Layout>
@@ -14,23 +16,23 @@ export default function Dashboard() {
 
         <PortfolioCard
           title="Portfolio Value"
-          value="0"
+          value={portfolioValue}
         />
         <PortfolioCard
           title="NAV"
-          value="1"
+          value={nav}
         />
         <PortfolioCard
           title="Total Units"
-          value="0"
+          value={totalUnits}
         />
         <PortfolioCard
           title="Total Investors"
-          value="0"
+          value={investors}
         />
         <PortfolioCard
           title="Profit / Loss"
-          value="0/_"
+          value="0 /_"
         />
 
       </div>
@@ -39,3 +41,5 @@ export default function Dashboard() {
 
   )
 }
+
+export default Dashboard
