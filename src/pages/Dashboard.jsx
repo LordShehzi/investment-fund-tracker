@@ -3,7 +3,7 @@ import PortfolioCard from "../components/PortfolioCard"
 import { usePortfolio } from "../context/PortfolioContext"
 
 function Dashboard() {
-  const { portfolioValue, nav, totalUnits, investors } = usePortfolio()
+  const { portfolioValue, nav, totalUnits, investors, profitLoss } = usePortfolio()
   return (
 
     <Layout>
@@ -32,7 +32,7 @@ function Dashboard() {
         />
         <PortfolioCard
           title="Profit / Loss"
-          value="0 /_"
+          value={profitLoss.toFixed(2)}
         />
 
       </div>

@@ -8,6 +8,11 @@ export function PortfolioProvider({ children }){
     const [transactions, setTransactions] = useState([])
     const [investors, setInvestors] = useState([])
 
+    const totalDeposits = transactions
+        .filter(t => t.type === "deposit")
+        .reduce((sum, t) => sum + t.amount, 0)
+    const profitLoss = portfolioValue - totalDeposits
+
     const totalUnits = transactions.reduce((sum, t)=> sum + t.units, 0)
 
     const nav = totalUnits === 0 ? 1 : portfolioValue / totalUnits
@@ -37,7 +42,7 @@ export function PortfolioProvider({ children }){
                 return
             }
 
-            units = -(amount - currentNav)
+            units = -(amount / currentNav)
 
             setPortfolioValue(prev => prev - amount)
 
@@ -47,7 +52,8 @@ export function PortfolioProvider({ children }){
             person,
             type,
             amount,
-            units
+            units,
+            date: new Date().toISOString()
         }
 
         setTransactions(prev => [...prev, newTransaction])
@@ -62,6 +68,7 @@ export function PortfolioProvider({ children }){
         nav,
         totalUnits,
         transactions,
+        profitLoss,
         investors,
         addTransaction
     }

@@ -2,9 +2,9 @@ import Sidebar from "./Sidebar"
 
 function Layout({children}){
     return (
-        <div style={{display:"flex"}}>
+        <div className="flex">
             <Sidebar/>
-            <div style={{padding:"20px", flex:1}}>
+            <div className="p-5 flex-1">
                 {children}
             </div>
         </div>
