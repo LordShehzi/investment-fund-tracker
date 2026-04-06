@@ -17,6 +17,34 @@ export function PortfolioProvider({ children }){
 
     const nav = totalUnits === 0 ? 1 : portfolioValue / totalUnits
 
+    const investorStats = investors.map(person => {
+
+        const investorTransactions = transactions.filter(t => t.person === person)
+
+        const units = investorTransactions.reduce((sum, t) => sum + t.units, 0)
+
+        const deposits = investorTransactions
+        .filter(t => t.type === "deposit")
+        .reduce((sum, t) => sum + t.amount, 0)
+
+        const withdrawals = investorTransactions
+        .filter((t => t.type === "withdraw"))
+        .reduce((sum, t) => sum + t.amount, 0)
+
+        const value = units * nav
+
+        const ownership = totalUnits === 0 ? 0 : (units / totalUnits) * 100
+
+        return{
+            person,
+            units,
+            value,
+            ownership,
+            deposits,
+            withdrawals
+        }
+    })
+
     function addTransaction(person, type, amount){
 
         const currentNav = nav
@@ -32,13 +60,13 @@ export function PortfolioProvider({ children }){
         }else{
 
             const investorUnits = transactions.
-            filter(t = t.person === person)
+            filter(t => t.person === person)
             .reduce((sum, t ) => sum + t.units, 0)
 
             const investorValue = investorUnits * currentNav
 
             if(amount > investorValue){
-                alert("Withdrawal exeeds investor balance")
+                alert("Withdrawal exceeds investor balance")
                 return
             }
 
@@ -65,12 +93,14 @@ export function PortfolioProvider({ children }){
 
     const value = {
         portfolioValue,
+        setPortfolioValue,
         nav,
         totalUnits,
         transactions,
         profitLoss,
         investors,
-        addTransaction
+        addTransaction,
+        investorStats
     }
 
     return(

@@ -1,43 +1,40 @@
-import Layout from "../components/Layout"
 import PortfolioCard from "../components/PortfolioCard"
 import { usePortfolio } from "../context/PortfolioContext"
 
 function Dashboard() {
-  const { portfolioValue, nav, totalUnits, investors, profitLoss } = usePortfolio()
+  const { portfolioValue, setPortfolioValue, nav, totalUnits, investors, profitLoss } = usePortfolio()
   return (
-
-    <Layout>
-
+    <>
       <h1 className="text-3xl font-bold mb-8">
         Dashboard
       </h1>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="mb-6 bg-white p-4 rounded shadow w-80">
 
-        <PortfolioCard
-          title="Portfolio Value"
+        <p className="font-semibold mb-2">
+          Update Portfolio Value
+        </p>
+
+        <input
+          type="number"
           value={portfolioValue}
-        />
-        <PortfolioCard
-          title="NAV"
-          value={nav}
-        />
-        <PortfolioCard
-          title="Total Units"
-          value={totalUnits}
-        />
-        <PortfolioCard
-          title="Total Investors"
-          value={investors}
-        />
-        <PortfolioCard
-          title="Profit / Loss"
-          value={profitLoss.toFixed(2)}
+          onChange={(e) => setPortfolioValue(Number(e.target.value.toLocaleString()))}
+          className="border rounded p-2 w-full"
         />
 
       </div>
 
-    </Layout>
+      <div className="grid grid-cols-3 gap-6">
+
+        <PortfolioCard title="Portfolio Value" value={portfolioValue.toLocaleString()} />
+        <PortfolioCard title="NAV" value={nav} />
+        <PortfolioCard title="Total Units" value={totalUnits.toLocaleString()} />
+        <PortfolioCard title="Total Investors" value={investors.length} />
+        <PortfolioCard title="Profit / Loss" value={profitLoss.toLocaleString()} />
+
+      </div>
+
+    </>
 
   )
 }
