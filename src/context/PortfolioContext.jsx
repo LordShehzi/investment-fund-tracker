@@ -4,9 +4,25 @@ const PortfolioContext = createContext();
 
 export function PortfolioProvider({ children }){
 
-    const [portfolioValue, setPortfolioValue] = useState(0)
-    const [transactions, setTransactions] = useState([])
-    const [investors, setInvestors] = useState([])
+    const [portfolioValue, setPortfolioValue] = useState(() => {
+        const saved = localStorage.getItem("portfolioValue")
+        return saved ? JSON.parse(saved) : 0
+    })
+    const [transactions, setTransactions] = useState(() => {
+        const saved = localStorage.getItem("transactions")
+        return saved ? JSON.parse(saved) : []
+    })
+    const [investors, setInvestors] = useState(() => {
+        const saved = localStorage.getItem("investors")
+        return saved ? JSON.parse(saved) : []
+    })
+
+    useEffect(() => {
+        localStorage.setItem("portfolioValue", JSON.stringify(portfolioValue))
+        localStorage.setItem("transactions", JSON.stringify(transactions))
+        localStorage.setItem("investors", JSON.stringify(investors))
+
+    }, [portfolioValue, transactions, investors])
 
     const totalDeposits = transactions
         .filter(t => t.type === "deposit")
@@ -17,7 +33,8 @@ export function PortfolioProvider({ children }){
 
     const nav = totalUnits === 0 ? 1 : portfolioValue / totalUnits
 
-    const investorStats = investors.map(person => {
+    const investorStats = investors
+        .map(person => {
 
         const investorTransactions = transactions.filter(t => t.person === person)
 
@@ -35,15 +52,19 @@ export function PortfolioProvider({ children }){
 
         const ownership = totalUnits === 0 ? 0 : (units / totalUnits) * 100
 
+        const profitLoss = value - (deposits + withdrawals)
+
         return{
             person,
             units,
             value,
             ownership,
             deposits,
-            withdrawals
+            withdrawals,
+            profitLoss
         }
     })
+    .sort((a,b) => b.value - a.value)
 
     function addTransaction(person, type, amount){
 

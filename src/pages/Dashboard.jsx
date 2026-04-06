@@ -27,7 +27,7 @@ function Dashboard() {
       <div className="grid grid-cols-3 gap-6">
 
         <PortfolioCard title="Portfolio Value" value={portfolioValue.toLocaleString()} />
-        <PortfolioCard title="NAV" value={nav} />
+        <PortfolioCard title="NAV" value={nav.toFixed(2)} />
         <PortfolioCard title="Total Units" value={totalUnits.toLocaleString()} />
         <PortfolioCard title="Total Investors" value={investors.length} />
         <PortfolioCard title="Profit / Loss" value={profitLoss.toLocaleString()} />

@@ -4,7 +4,7 @@ import Layout from "../components/Layout"
 
 function Transactions() {
 
-  const { addTransaction, transactions} = usePortfolio()
+  const { addTransaction, transactions, investors} = usePortfolio()
 
   const[ person, setPerson] = useState("")
   const[ amount, setAmount] = useState("")
@@ -40,9 +40,17 @@ function Transactions() {
               <label className="block text-sm">Investor</label>
               <input
               className="border p-2 rounded"
+              list="investor-list"
               value={person}
+              placeholder="Investor Name"
               onChange={e => setPerson(e.target.value)}
               />
+              <datalist id="investor-list">
+                {investors.map((inv) => (
+                  <option key={inv} value={inv}></option>
+                ))}
+              </datalist>
+
             </div>
             
             <div>
@@ -94,17 +102,19 @@ function Transactions() {
               <th>Type</th>
               <th>Amount</th>
               <th>Units</th>
+              <th>Date</th>
             </tr>
           </thead>
 
           <tbody>
-{console.log(transactions)}
+
             {transactions.map((t, index) => (
               <tr key={index} className="border-b">
                 <td className="py-2">{t.person}</td>
                 <td>{t.type}</td>
                 <td>{t.amount.toLocaleString()}</td>
-                <td>{t.units.toFixed(2).toLocaleString()}</td>
+                <td>{t.units.toLocaleString()}</td>
+                <td>{new Date(t.date).toLocaleDateString("en-GB")}</td>
               </tr>
             ))}
           </tbody>
