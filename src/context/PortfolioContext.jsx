@@ -27,7 +27,14 @@ export function PortfolioProvider({ children }){
     const totalDeposits = transactions
         .filter(t => t.type === "deposit")
         .reduce((sum, t) => sum + t.amount, 0)
-    const profitLoss = portfolioValue - totalDeposits
+    
+    const totalWithdrawals = transactions
+        .filter(t => t.type === "withdraw")
+        .reduce((sum, t) => sum + t.amount, 0)
+
+    const profitLoss = portfolioValue - (totalDeposits - totalWithdrawals)
+
+    const profitLossP = (profitLoss / (totalDeposits - totalWithdrawals)) * 100
 
     const totalUnits = transactions.reduce((sum, t)=> sum + t.units, 0)
 
@@ -52,7 +59,9 @@ export function PortfolioProvider({ children }){
 
         const ownership = totalUnits === 0 ? 0 : (units / totalUnits) * 100
 
-        const profitLoss = value - (deposits + withdrawals)
+        const profitLoss = value - (deposits - withdrawals)
+
+        const profitLossP = (profitLoss/(deposits - withdrawals)) * 100
 
         return{
             person,
@@ -61,7 +70,8 @@ export function PortfolioProvider({ children }){
             ownership,
             deposits,
             withdrawals,
-            profitLoss
+            profitLoss,
+            profitLossP
         }
     })
     .sort((a,b) => b.value - a.value)
@@ -118,7 +128,10 @@ export function PortfolioProvider({ children }){
         nav,
         totalUnits,
         transactions,
+        totalDeposits,
+        totalWithdrawals,
         profitLoss,
+        profitLossP,
         investors,
         addTransaction,
         investorStats

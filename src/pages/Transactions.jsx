@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { usePortfolio } from "../context/PortfolioContext"
-import Layout from "../components/Layout"
+import { formatDate, formatNumber } from "../utils/format"
 
 function Transactions() {
 
@@ -58,7 +58,7 @@ function Transactions() {
               <input
               type="number"
               className="border p-2 rounded"
-              value={amount.toLocaleString()}
+              value={amount}
               onChange={e => setAmount(e.target.value)}
               />
             </div>
@@ -112,11 +112,11 @@ function Transactions() {
               <tr key={index} className="border-b">
                 <td className="py-2">{t.person}</td>
                 <td>{t.type}</td>
-                <td>{t.amount.toLocaleString()}</td>
-                <td>{t.units.toLocaleString()}</td>
-                <td>{new Date(t.date).toLocaleDateString("en-GB")}</td>
+                <td>{formatNumber(t.amount, 1)}</td>
+                <td>{formatNumber(t.units, 1)}</td>
+                <td>{formatDate(t.date)}</td>
               </tr>
-            ))}
+            )).toReversed()}
           </tbody>
         </table>
       </div>

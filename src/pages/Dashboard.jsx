@@ -1,8 +1,21 @@
 import PortfolioCard from "../components/PortfolioCard"
 import { usePortfolio } from "../context/PortfolioContext"
+import { formatNumber } from "../utils/format"
 
 function Dashboard() {
-  const { portfolioValue, setPortfolioValue, nav, totalUnits, investors, profitLoss } = usePortfolio()
+
+  const { 
+    portfolioValue,
+    setPortfolioValue,
+    nav,
+    totalUnits,
+    totalDeposits,
+    totalWithdrawals,
+    investors,
+    profitLoss,
+    profitLossP
+  } = usePortfolio()
+
   return (
     <>
       <h1 className="text-3xl font-bold mb-8">
@@ -18,19 +31,56 @@ function Dashboard() {
         <input
           type="number"
           value={portfolioValue}
-          onChange={(e) => setPortfolioValue(Number(e.target.value.toLocaleString()))}
+          onChange={(e) => setPortfolioValue(Number(e.target.value))}
           className="border rounded p-2 w-full"
         />
 
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-4 gap-6">
 
-        <PortfolioCard title="Portfolio Value" value={portfolioValue.toLocaleString()} />
-        <PortfolioCard title="NAV" value={nav.toFixed(2)} />
-        <PortfolioCard title="Total Units" value={totalUnits.toLocaleString()} />
-        <PortfolioCard title="Total Investors" value={investors.length} />
-        <PortfolioCard title="Profit / Loss" value={profitLoss.toLocaleString()} />
+        <PortfolioCard 
+        title="Portfolio Value" 
+        value={formatNumber(portfolioValue, 1)} 
+        valueClassName={portfolioValue > (totalDeposits - totalWithdrawals) ? "text-green-500" : "text-red-500"} 
+        />
+
+        <PortfolioCard 
+        title="Total Deposits" 
+        value={formatNumber(totalDeposits, 1)} 
+        />
+
+        <PortfolioCard 
+        title="Total Withdrawals" 
+        value={formatNumber(totalWithdrawals, 1)} 
+        />
+
+        <PortfolioCard 
+        title="Deposits - Withdrawals" 
+        value={formatNumber(totalDeposits - totalWithdrawals, 1)} 
+        />
+        
+        <PortfolioCard 
+        title="NAV" 
+        value={nav.toFixed(2)} 
+        />
+
+        <PortfolioCard 
+        title="Total Units" 
+        value={formatNumber(totalUnits)} 
+        />
+
+        <PortfolioCard 
+        title="Total Investors" 
+        value={investors.length} 
+        />
+
+        <PortfolioCard 
+        title="Profit / Loss" 
+        value={formatNumber(profitLoss, 1) + ` (` + formatNumber(profitLossP) + `%)`} 
+        valueClassName={profitLoss > 0 ? "text-green-500" : "text-red-500"} 
+        />
+
 
       </div>
 

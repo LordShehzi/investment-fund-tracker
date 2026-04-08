@@ -1,4 +1,4 @@
-function PortfolioCard({ title,value }){
+function PortfolioCard({ title,value,valueClassName }){
     return(
         
         <div className="bg-white rounded-xl shadow p-6">
@@ -7,7 +7,7 @@ function PortfolioCard({ title,value }){
                 {title}
             </p>
 
-            <h3 className="text-2xl font-bold mt-2">
+            <h3 className={`text-2xl font-bold mt-2 ${valueClassName || ""}`}>
                 {value}
             </h3>
 
