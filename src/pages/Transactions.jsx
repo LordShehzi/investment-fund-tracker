@@ -6,9 +6,15 @@ function Transactions() {
 
   const { addTransaction, transactions, investors} = usePortfolio()
 
-  const[ person, setPerson] = useState("")
-  const[ amount, setAmount] = useState("")
-  const[ type, setType] = useState("deposit")
+  const [ person, setPerson ] = useState("")
+  const [ amount, setAmount ] = useState("")
+  const [ type, setType ] = useState("deposit")
+
+  const [ selectedInvestor, setSelectedInvestor ] = useState("")
+
+  const filteredTransactions = selectedInvestor
+  ? transactions.filter((t) => t.person === selectedInvestor)
+  : transactions
 
   function handleSubmit(e){
     e.preventDefault()
@@ -90,9 +96,27 @@ function Transactions() {
 
       <div className="rounded shadow bg-white p-4">
         
-        <h2 className="text-lg font-semibold mb-4">
-          Transaction History
-        </h2>
+        <div className="flex">
+
+          <h2 className="text-lg font-semibold mb-4">
+            Transaction History
+          </h2>
+        
+          <div className="ml-auto">
+            <label className="mr-2">Filter Investor:</label>
+            <select
+            className="border p-2 rounded"
+            value={selectedInvestor}
+            onChange={(e) => setSelectedInvestor(e.target.value)}
+            >
+              <option value="">All</option>
+              {investors.map((inv) => (
+                <option key={inv} value={inv}>{inv}</option>
+              ))}
+            </select>
+          </div>
+
+        </div>
 
         <table className="w-full text-left">
 
@@ -108,7 +132,9 @@ function Transactions() {
 
           <tbody>
 
-            {transactions.map((t, index) => (
+            {filteredTransactions
+            .toReversed()
+            .map((t, index) => (
               <tr key={index} className="border-b">
                 <td className="py-2">{t.person}</td>
                 <td>{t.type}</td>
@@ -116,7 +142,7 @@ function Transactions() {
                 <td>{formatNumber(t.units, 1)}</td>
                 <td>{formatDate(t.date)}</td>
               </tr>
-            )).toReversed()}
+            ))}
           </tbody>
         </table>
       </div>

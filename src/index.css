@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-input{
+input, select{
     outline: none;
 }

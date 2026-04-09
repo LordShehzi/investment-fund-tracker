@@ -9,6 +9,9 @@ function InvestorDetail(){
     const { investorStats, transactions } = usePortfolio()
 
     const investor = investorStats.find(i => i.person === name)
+    if (!investor) {
+        return <div className="text-red-500 font-bold text-5xl">Investor not found</div>
+    }
 
     const investorTransactions = transactions.filter(t => t.person === name)
 
@@ -49,7 +52,7 @@ function InvestorDetail(){
 
             </div>
 
-            <table className="w-full bg-white shadow rounded xl">
+            <table className="w-full bg-white shadow rounded-xl">
                 <thead className="border-b">
                     <tr>
 
@@ -62,20 +65,22 @@ function InvestorDetail(){
                 </thead>
                 <tbody>
 
-                    {investorTransactions.map((t, i) => (
+                    {investorTransactions
+                    .toReversed()
+                    .map((t, i) => (
                         <tr key={i} className="border-b">
                             
                             <td className="p-4">{t.type}</td>
 
-                            <td className="p4">
+                            <td className="p-4">
                                 {formatNumber(t.amount)}
                             </td>
                             
-                            <td className="p4">
+                            <td className="p-4">
                                 {formatNumber(t.units)}
                             </td>
                             
-                            <td className="p4">
+                            <td className="p-4">
                                 {formatDate(t.date)}
                             </td>
                             
