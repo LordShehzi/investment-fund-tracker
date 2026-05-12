@@ -76,7 +76,7 @@ export function PortfolioProvider({ children }){
     })
     .sort((a,b) => b.value - a.value)
 
-    function addTransaction(person, type, amount){
+    function addTransaction(person, type, amount, prev, date){
 
         const currentNav = nav
 
@@ -86,7 +86,7 @@ export function PortfolioProvider({ children }){
 
             units = amount / currentNav
 
-            setPortfolioValue(prev => prev + amount)
+            setPortfolioValue(prev + amount)
 
         }else{
 
@@ -98,12 +98,12 @@ export function PortfolioProvider({ children }){
 
             if(amount > investorValue){
                 alert("Withdrawal exceeds investor balance")
-                return
+                return false
             }
 
             units = -(amount / currentNav)
 
-            setPortfolioValue(prev => prev - amount)
+            setPortfolioValue(prev - amount)
 
         }
 
@@ -111,8 +111,9 @@ export function PortfolioProvider({ children }){
             person,
             type,
             amount,
+            prev,
             units,
-            date: new Date().toISOString()
+            date: new Date(date).toISOString()
         }
 
         setTransactions(prev => [...prev, newTransaction])
@@ -120,6 +121,8 @@ export function PortfolioProvider({ children }){
         if(!investors.includes(person)){
             setInvestors(prev => [...prev, person])
         }
+
+        return true
     }
 
     const value = {

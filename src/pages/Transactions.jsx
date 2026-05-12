@@ -1,14 +1,18 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { usePortfolio } from "../context/PortfolioContext"
 import { formatDate, formatNumber } from "../utils/format"
 
 function Transactions() {
 
-  const { addTransaction, transactions, investors} = usePortfolio()
+  const { addTransaction, transactions, investors, portfolioValue} = usePortfolio()
 
   const [ person, setPerson ] = useState("")
   const [ amount, setAmount ] = useState("")
+  const [ prev, setPrev ] = useState(portfolioValue)
   const [ type, setType ] = useState("deposit")
+  const [ date, setDate ] = useState(()=>{
+    return new Date().toISOString().split("T")[0]
+  })
 
   const [ selectedInvestor, setSelectedInvestor ] = useState("")
 
@@ -16,15 +20,29 @@ function Transactions() {
   ? transactions.filter((t) => t.person === selectedInvestor)
   : transactions
 
+  const sortedTransactions = [...filteredTransactions].sort(
+    (a, b) => new Date(b.date) - new Date(b.date)
+  )
+
   function handleSubmit(e){
     e.preventDefault()
 
     if(!person || !amount) return
 
-    addTransaction(person, type, Number(amount))
+    const success = addTransaction(person, type, Number(amount), Number(prev), date)
 
     setPerson("")
     setAmount("")
+    setDate(new Date().toISOString().split("T")[0])
+    if(success){
+      setPrev(
+        prev + (
+          type === "deposit"
+          ? Number(amount)
+          : -Number(amount)
+        )
+      )
+    }
   }
 
   return(
@@ -66,6 +84,25 @@ function Transactions() {
               className="border p-2 rounded"
               value={amount}
               onChange={e => setAmount(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm">Current Portfolio Value</label>
+              <input
+              type="number"
+              className="border p-2 rounded"
+              value={prev}
+              onChange={e => setPrev(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm">Date</label>
+              <input
+                type="date"
+                className="border p-2 rounded"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
               />
             </div>
 
@@ -132,8 +169,7 @@ function Transactions() {
 
           <tbody>
 
-            {filteredTransactions
-            .toReversed()
+            {sortedTransactions
             .map((t, index) => (
               <tr key={index} className="border-b">
                 <td className="py-2">{t.person}</td>
