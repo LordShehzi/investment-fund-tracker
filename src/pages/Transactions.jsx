@@ -21,7 +21,7 @@ function Transactions() {
   : transactions
 
   const sortedTransactions = [...filteredTransactions].sort(
-    (a, b) => new Date(b.date) - new Date(b.date)
+    (a, b) => new Date(b.date) - new Date(a.date)
   )
 
   function handleSubmit(e){
@@ -33,10 +33,9 @@ function Transactions() {
 
     setPerson("")
     setAmount("")
-    setDate(new Date().toISOString().split("T")[0])
     if(success){
-      setPrev(
-        prev + (
+      setPrev(current =>
+        current + (
           type === "deposit"
           ? Number(amount)
           : -Number(amount)
@@ -92,7 +91,7 @@ function Transactions() {
               type="number"
               className="border p-2 rounded"
               value={prev}
-              onChange={e => setPrev(e.target.value)}
+              onChange={e => setPrev(Number(e.target.value))}
               />
             </div>
 
