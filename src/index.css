@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-input, select{
+*{
+    user-select: none;
     outline: none;
 }

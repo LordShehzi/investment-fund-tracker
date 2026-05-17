@@ -1,4 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
+import { formatDate } from "../utils/format";
 
 const PortfolioContext = createContext();
 
@@ -39,6 +41,35 @@ export function PortfolioProvider({ children }){
     const totalUnits = transactions.reduce((sum, t)=> sum + t.units, 0)
 
     const nav = totalUnits === 0 ? 1 : portfolioValue / totalUnits
+
+    const portfolioHistory = transactions
+        .slice()
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .reduce((dailyHistory, transaction) => {
+            const dayKey = transaction.date.split("T")[0]
+            const valueAfter =
+                transaction.type === "deposit"
+                    ? transaction.prev + transaction.amount
+                    : transaction.prev - transaction.amount
+
+            const existingDay = dailyHistory[dailyHistory.length - 1]
+
+            if (existingDay && existingDay.dayKey === dayKey) {
+                existingDay.value = valueAfter
+                existingDay.transactionCount += 1
+                return dailyHistory
+            }
+
+            dailyHistory.push({
+                id: dayKey,
+                dayKey,
+                date: formatDate(transaction.date),
+                value: valueAfter,
+                transactionCount: 1
+            })
+
+            return dailyHistory
+        }, [])
 
     const investorStats = investors
         .map(person => {
@@ -137,7 +168,8 @@ export function PortfolioProvider({ children }){
         profitLossP,
         investors,
         addTransaction,
-        investorStats
+        investorStats,
+        portfolioHistory
     }
 
     return(

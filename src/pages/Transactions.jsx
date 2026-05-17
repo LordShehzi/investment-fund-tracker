@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { usePortfolio } from "../context/PortfolioContext"
 import { formatDate, formatNumber } from "../utils/format"
 

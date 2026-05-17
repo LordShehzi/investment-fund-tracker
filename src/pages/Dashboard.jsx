@@ -1,4 +1,5 @@
 import PortfolioCard from "../components/PortfolioCard"
+import PortfolioChart from "../components/PortfolioChart"
 import { usePortfolio } from "../context/PortfolioContext"
 import { formatNumber } from "../utils/format"
 
@@ -83,6 +84,8 @@ function Dashboard() {
 
 
       </div>
+
+      <PortfolioChart />
 
     </>
 
