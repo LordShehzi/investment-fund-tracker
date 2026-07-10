@@ -45,31 +45,52 @@ export function PortfolioProvider({ children }){
     const portfolioHistory = transactions
         .slice()
         .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .reduce((dailyHistory, transaction) => {
-            const dayKey = transaction.date.split("T")[0]
-            const valueAfter =
-                transaction.type === "deposit"
+        .reduce(
+            (dailyHistory, transaction) => {
+                const dayKey = transaction.date.split("T")[0]
+                const isDeposit = transaction.type === "deposit"
+                const depositAmount = isDeposit ? transaction.amount : 0
+                const withdrawalAmount = isDeposit ? 0 : transaction.amount
+
+                dailyHistory.cumulativeDeposits += depositAmount
+                dailyHistory.cumulativeWithdrawals += withdrawalAmount
+
+                const valueAfter = isDeposit
                     ? transaction.prev + transaction.amount
                     : transaction.prev - transaction.amount
+                const netCapitalAfter =
+                    dailyHistory.cumulativeDeposits - dailyHistory.cumulativeWithdrawals
 
-            const existingDay = dailyHistory[dailyHistory.length - 1]
+                const existingDay = dailyHistory.items[dailyHistory.items.length - 1]
 
-            if (existingDay && existingDay.dayKey === dayKey) {
-                existingDay.value = valueAfter
-                existingDay.transactionCount += 1
+                if (existingDay && existingDay.dayKey === dayKey) {
+                    existingDay.portfolioValue = valueAfter
+                    existingDay.dailyDeposits += depositAmount
+                    existingDay.dailyWithdrawals += withdrawalAmount
+                    existingDay.netCapital = netCapitalAfter
+                    existingDay.transactionCount += 1
+                    return dailyHistory
+                }
+
+                dailyHistory.items.push({
+                    id: dayKey,
+                    dayKey,
+                    date: formatDate(transaction.date),
+                    portfolioValue: valueAfter,
+                    dailyDeposits: depositAmount,
+                    dailyWithdrawals: withdrawalAmount,
+                    netCapital: netCapitalAfter,
+                    transactionCount: 1
+                })
+
                 return dailyHistory
+            },
+            {
+                items: [],
+                cumulativeDeposits: 0,
+                cumulativeWithdrawals: 0
             }
-
-            dailyHistory.push({
-                id: dayKey,
-                dayKey,
-                date: formatDate(transaction.date),
-                value: valueAfter,
-                transactionCount: 1
-            })
-
-            return dailyHistory
-        }, [])
+        ).items
 
     const investorStats = investors
         .map(person => {
