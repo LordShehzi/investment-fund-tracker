@@ -2,6 +2,8 @@
 
 A portfolio management system based on Net Asset Value (NAV).
 
+https://investment-fund-tracker.netlify.app/
+
 Features:
 - investor management
 - deposit/withdrawal tracking
