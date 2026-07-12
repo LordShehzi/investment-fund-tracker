@@ -52,7 +52,7 @@ function PortfolioChart() {
         <p className="text-sm text-gray-500">Portfolio growth</p>
         <h2 className="text-xl font-semibold mt-1">No transaction history yet</h2>
         <p className="text-gray-500 mt-2">
-          Add a deposit or withdrawal to generate the portfolio timeline.
+          Add a deposit to generate the portfolio timeline.
         </p>
       </div>
     )

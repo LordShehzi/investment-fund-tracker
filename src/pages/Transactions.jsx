@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { usePortfolio } from "../context/PortfolioContext"
 import { formatDate, formatNumber } from "../utils/format"
 
 function Transactions() {
 
-  const { addTransaction, transactions, investors, portfolioValue} = usePortfolio()
+  const { addTransaction, transactions, investors, portfolioValue, setPortfolioValue} = usePortfolio()
 
   const [ person, setPerson ] = useState("")
   const [ amount, setAmount ] = useState("")
@@ -23,6 +23,10 @@ function Transactions() {
   const sortedTransactions = [...filteredTransactions].sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   )
+
+  useEffect(() => {
+    setPortfolioValue(Number(prev))
+  }, [prev])
 
   function handleSubmit(e){
     e.preventDefault()
